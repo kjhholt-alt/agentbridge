@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+.tox/
+
+# Node
+node_modules/
+.next/
+dist/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Godot
+.godot/
+.import/
+*.import.tmp
+export.cfg
+
+# Unity
+Library/
+Temp/
+Logs/
+UserSettings/
+*.csproj
+*.sln
+*.unityproj
+*.suo
+*.user
+
+# Generated
+out/
+build/
+*.log
+*.ndjson
+
+# Local env
+.env
+.env.local
+agentbridge.token

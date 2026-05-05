@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentbridge.dev/schema/v1/responses.json",
+  "title": "AgentBridge response envelope",
+  "description": "Every JSON line sent by the adapter to the client conforms to this schema.",
+  "type": "object",
+  "oneOf": [
+    {"$ref": "#/$defs/ok"},
+    {"$ref": "#/$defs/err"}
+  ],
+  "$defs": {
+    "ok": {
+      "type": "object",
+      "required": ["ok"],
+      "properties": {
+        "ok": {"const": true},
+        "id": {"type": "string"},
+        "pong": {"type": "boolean"},
+        "session_id": {"type": "string"},
+        "server_caps": {"type": "array", "items": {"type": "string"}},
+        "max_event_buffer": {"type": "integer", "minimum": 0},
+        "schema_url": {"type": "string"},
+        "engine": {"type": "string"},
+        "engine_version": {"type": "string"},
+        "state": {"type": "object"},
+        "events": {"type": "array"},
+        "capabilities": {"type": "array", "items": {"type": "string"}},
+        "hash": {"type": "string", "pattern": "^[0-9a-fA-F]{16}$"},
+        "metrics": {"type": "object"}
+      },
+      "additionalProperties": true
+    },
+    "err": {
+      "type": "object",
+      "required": ["ok", "error", "code"],
+      "properties": {
+        "ok": {"const": false},
+        "id": {"type": "string"},
+        "error": {"type": "string", "minLength": 1},
+        "code": {"type": "integer"}
+      },
+      "additionalProperties": false
+    }
+  }
+}

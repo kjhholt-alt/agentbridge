@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentbridge.dev/schema/v1/commands.json",
+  "title": "AgentBridge command envelope",
+  "description": "Every JSON line sent by the client to the adapter conforms to this schema.",
+  "type": "object",
+  "oneOf": [
+    {"$ref": "#/$defs/hello"},
+    {"$ref": "#/$defs/ping"},
+    {"$ref": "#/$defs/state"},
+    {"$ref": "#/$defs/action"},
+    {"$ref": "#/$defs/events"},
+    {"$ref": "#/$defs/reset"},
+    {"$ref": "#/$defs/quit"},
+    {"$ref": "#/$defs/capabilities"},
+    {"$ref": "#/$defs/subscribe"},
+    {"$ref": "#/$defs/unsubscribe"},
+    {"$ref": "#/$defs/set_seed"},
+    {"$ref": "#/$defs/step"},
+    {"$ref": "#/$defs/set_timescale"},
+    {"$ref": "#/$defs/snapshot_hash"},
+    {"$ref": "#/$defs/bind_action"},
+    {"$ref": "#/$defs/metrics"}
+  ],
+  "$defs": {
+    "_envelope": {
+      "type": "object",
+      "properties": {
+        "id": {"type": "string", "description": "Optional opaque correlation ID"},
+        "token": {"type": "string", "description": "Auth token; mandatory after first hello on most adapters"}
+      }
+    },
+    "hello": {
+      "allOf": [{"$ref": "#/$defs/_envelope"}],
+      "type": "object",
+      "required": ["cmd", "protocol", "agent_name", "token"],
+      "properties": {
+        "cmd": {"const": "hello"},
+        "protocol": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+        "agent_name": {"type": "string", "minLength": 1, "maxLength": 64},
+        "capabilities": {
+          "type": "array",
+          "items": {"type": "string"},
+          "default": []
+        },
+        "token": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "ping": {
+      "allOf": [{"$ref": "#/$defs/_envelope"}],
+      "type": "object",
+      "required": ["cmd"],
+      "properties": {"cmd": {"const": "ping"}},
+      "additionalProperties": true
+    },
+    "state": {
+      "allOf": [{"$ref": "#/$defs/_envelope"}],
+      "type": "object",
+      "required": ["cmd"],
+      "properties": {"cmd": {"const": "state"}},
+      "additionalProperties": true
+    },
+    "action": {
+      "allOf": [{"$ref": "#/$defs/_envelope"}],
+      "type": "object",
+      "required": ["cmd", "name"],
+      "properties": {
+        "cmd": {"const": "action"},
+        "name": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,47}$"},
+        "value": {
+          "description": "Sticky toggles use bool; look-deltas use float (radians); one-shots may omit",
+          "oneOf": [
+            {"type": "boolean"},
+            {"type": "number"},
+            {"type": "string"}
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "events": {
+      "allOf": [{"$ref": "#/$defs/_envelope"}],
+      "type": "object",
+      "required": ["cmd"],
+      "properties": {"cmd": {"const": "events"}},
+      "additionalProperties": true
+    },
+    "reset": {
+      "allOf": [{"$ref": "#/$defs/_envelope"}],
+      "type": "object",
+      "required": ["cmd"],
+      "properties": {"cmd": {"const": "reset"}},
+      "additionalProperties": true
+    },
+    "quit": {
+      "allOf": [{"$ref": "#/$defs/_envelope"}],
+      "type": "object",
+      "required": ["cmd"],
+      "properties": {"cmd": {"const": "quit"}},
+      "additionalProperties": true
+    },
+    "capabilities": {
+      "allOf": [{"$ref": "#/$defs/_envelope"}],
+      "type": "object",
+      "required": ["cmd"],
+      "properties": {"cmd": {"const": "capabilities"}},
+      "additionalProperties": true
+    },
+    "subscribe": {
+      "allOf": [{"$ref": "#/$defs/_envelope"}],
+      "type": "object",
+      "required": ["cmd", "types"],
+      "properties": {
+        "cmd": {"const": "subscribe"},
+        "types": {"type": "array", "items": {"type": "string"}, "minItems": 1}
+      },
+      "additionalProperties": true
+    },
+    "unsubscribe": {
+      "allOf": [{"$ref": "#/$defs/_envelope"}],
+      "type": "object",
+      "required": ["cmd", "types"],
+      "properties": {
+        "cmd": {"const": "unsubscribe"},
+        "types": {"type": "array", "items": {"type": "string"}, "minItems": 1}
+      },
+      "additionalProperties": true
+    },
+    "set_seed": {
+      "allOf": [{"$ref": "#/$defs/_envelope"}],
+      "type": "object",
+      "required": ["cmd", "seed"],
+      "properties": {
+        "cmd": {"const": "set_seed"},
+        "seed": {"type": "integer"}
+      },
+      "additionalProperties": true
+    },
+    "step": {
+      "allOf": [{"$ref": "#/$defs/_envelope"}],
+      "type": "object",
+      "required": ["cmd", "frames"],
+      "properties": {
+        "cmd": {"const": "step"},
+        "frames": {"type": "integer", "minimum": 1, "maximum": 100000}
+      },
+      "additionalProperties": true
+    },
+    "set_timescale": {
+      "allOf": [{"$ref": "#/$defs/_envelope"}],
+      "type": "object",
+      "required": ["cmd", "scale"],
+      "properties": {
+        "cmd": {"const": "set_timescale"},
+        "scale": {"type": "number", "minimum": 0.0, "maximum": 64.0}
+      },
+      "additionalProperties": true
+    },
+    "snapshot_hash": {
+      "allOf": [{"$ref": "#/$defs/_envelope"}],
+      "type": "object",
+      "required": ["cmd"],
+      "properties": {"cmd": {"const": "snapshot_hash"}},
+      "additionalProperties": true
+    },
+    "bind_action": {
+      "allOf": [{"$ref": "#/$defs/_envelope"}],
+      "type": "object",
+      "required": ["cmd", "name", "input_action", "kind"],
+      "properties": {
+        "cmd": {"const": "bind_action"},
+        "name": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,47}$"},
+        "input_action": {"type": "string"},
+        "kind": {"enum": ["sticky", "oneshot", "look_delta"]}
+      },
+      "additionalProperties": true
+    },
+    "metrics": {
+      "allOf": [{"$ref": "#/$defs/_envelope"}],
+      "type": "object",
+      "required": ["cmd"],
+      "properties": {"cmd": {"const": "metrics"}},
+      "additionalProperties": true
+    }
+  }
+}

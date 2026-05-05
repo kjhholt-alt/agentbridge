@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentbridge.dev/schema/v1/state.json",
+  "title": "AgentBridge base state",
+  "description": "Minimum state shape every adapter MUST emit on the `state` command. Engines extend with arbitrary additional keys.",
+  "type": "object",
+  "required": ["player", "time"],
+  "properties": {
+    "player": {
+      "type": "object",
+      "required": ["position"],
+      "properties": {
+        "position": {
+          "type": "array",
+          "items": {"type": "number"},
+          "minItems": 3,
+          "maxItems": 3,
+          "description": "[x, y, z] world position in engine units"
+        },
+        "yaw": {"type": "number", "description": "Yaw in radians (0 = facing -Z)"},
+        "pitch": {"type": "number", "description": "Pitch in radians"},
+        "hp": {"type": "number", "minimum": 0},
+        "hp_max": {"type": "number", "minimum": 0}
+      },
+      "additionalProperties": true
+    },
+    "time": {
+      "type": "object",
+      "properties": {
+        "session_seconds": {"type": "number"},
+        "frame": {"type": "integer", "minimum": 0},
+        "phase": {"type": "string", "description": "Engine-specific (e.g. 'night', 'dawn')"},
+        "day": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": true
+    },
+    "ticks": {"type": "integer", "minimum": 0}
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentbridge.dev/schema/v1/events.json",
+  "title": "AgentBridge event",
+  "description": "Every event in the adapter's event buffer (or pushed via subscribe) conforms to this schema.",
+  "type": "object",
+  "required": ["type", "t"],
+  "properties": {
+    "type": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Event type identifier. Reserved + suggested types listed in spec section 7."
+    },
+    "t": {
+      "type": "number",
+      "description": "Seconds since session_start."
+    },
+    "session_id": {"type": "string"},
+    "id": {"type": "string", "description": "Type-specific identifier (e.g. infected ID, region ID)"},
+    "name": {"type": "string", "description": "Type-specific human-readable name"},
+    "payload": {"type": "object"}
+  },
+  "additionalProperties": true
+}
