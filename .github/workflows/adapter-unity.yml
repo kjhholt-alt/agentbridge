@@ -1,0 +1,33 @@
+name: adapter-unity
+
+on:
+  pull_request:
+    paths:
+      - "adapters/unity/**"
+      - ".github/workflows/adapter-unity.yml"
+
+jobs:
+  package-shape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify UPM package shape
+        run: |
+          set -e
+          test -f adapters/unity/AgentBridge/package.json
+          test -f adapters/unity/AgentBridge/Runtime/AgentBridge.asmdef
+          test -f adapters/unity/AgentBridge/Runtime/AgentBridge.cs
+          test -f adapters/unity/AgentBridge/Runtime/AgentAuth.cs
+          test -f adapters/unity/AgentBridge/Runtime/AgentStateDump.cs
+          test -f adapters/unity/AgentBridge/Runtime/AgentInputDriver.cs
+          echo "Unity package shape OK"
+      - name: Verify .cs files are ASCII-only
+        run: |
+          set -e
+          for f in $(find adapters/unity -name "*.cs"); do
+            if grep -P "[\x80-\xff]" "$f" > /dev/null 2>&1; then
+              echo "::error file=$f::contains non-ASCII characters"
+              exit 1
+            fi
+          done
+          echo "All .cs files are ASCII-only"

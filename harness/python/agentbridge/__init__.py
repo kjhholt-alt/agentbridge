@@ -1,10 +1,16 @@
 """AgentBridge Python harness.
 
-Entry point for the spec-validated client + replay + orchestrator.
-
-Phase 1 ships only the protocol module (schema loader + self-check).
-Phase 4 fills in the client, replay, orchestrator, and CLI.
+Phase 4: typed client (sync + async), replay verifier, orchestrator,
+and `agentbridge` CLI all live here.
 """
 
+from .client import Client, AsyncClient, BridgeError, HelloResponse, PROTOCOL_VERSION
+from .replay import verify, record, DivergenceReport
+
 __version__ = "0.1.0"
-__protocol_version__ = "1.0.0"
+__protocol_version__ = PROTOCOL_VERSION
+
+__all__ = [
+    "Client", "AsyncClient", "BridgeError", "HelloResponse",
+    "PROTOCOL_VERSION", "verify", "record", "DivergenceReport",
+]

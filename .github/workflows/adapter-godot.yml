@@ -1,0 +1,32 @@
+name: adapter-godot
+
+on:
+  pull_request:
+    paths:
+      - "adapters/godot/**"
+      - ".github/workflows/adapter-godot.yml"
+
+jobs:
+  ascii-only:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify .gd files are ASCII-only
+        run: |
+          set -e
+          for f in $(find adapters/godot -name "*.gd"); do
+            if grep -P "[\x80-\xff]" "$f" > /dev/null 2>&1; then
+              echo "::error file=$f::contains non-ASCII characters"
+              exit 1
+            fi
+          done
+          echo "All .gd files are ASCII-only"
+  plugin-cfg:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Sanity-check plugin.cfg
+        run: |
+          test -f adapters/godot/addons/agentbridge/plugin.cfg
+          grep -q '^name="AgentBridge"' adapters/godot/addons/agentbridge/plugin.cfg
+          grep -q '^script="agent_bridge.gd"' adapters/godot/addons/agentbridge/plugin.cfg

@@ -1,0 +1,48 @@
+site_name: AgentBridge
+site_description: Portable AI playtesting infrastructure for game engines
+site_url: https://agentbridge.buildkit.store
+repo_url: https://github.com/kjhholt-alt/agentbridge
+repo_name: kjhholt-alt/agentbridge
+copyright: Copyright (c) 2026 Kruz Holt -- MIT
+docs_dir: docs
+site_dir: _site
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: black
+      accent: orange
+  features:
+    - navigation.sections
+    - navigation.expand
+    - content.code.copy
+    - content.tabs.link
+
+nav:
+  - Overview: index.md
+  - Spec:
+    - Wire protocol v1.0.0: spec/protocol.md
+    - JSON schemas: spec/schemas.md
+    - Conformance: spec/conformance.md
+  - Adapters:
+    - Godot: adapters/godot.md
+    - Unity: adapters/unity.md
+  - Harness:
+    - Python: harness/python.md
+    - CLI: harness/cli.md
+    - Replay verification: harness/replay.md
+  - Examples:
+    - Quickstart -- Godot: examples/godot-quickstart.md
+    - Quickstart -- Unity: examples/unity-quickstart.md
+  - Changelog: changelog.md
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - toc:
+      permalink: true
