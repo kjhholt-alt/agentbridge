@@ -42,6 +42,7 @@ UserSettings/
 # Generated
 out/
 build/
+_site/
 *.log
 *.ndjson
 
