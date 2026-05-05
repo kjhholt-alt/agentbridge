@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "agentbridge"
 version = "0.1.0"
 description = "AgentBridge Python harness -- spec-validated client + replay + orchestrator for AI playtesting any compliant game adapter."
-readme = "../../README.md"
+readme = "README.md"
 license = {text = "MIT"}
 authors = [{name = "Kruz Holt"}]
 requires-python = ">=3.11"
