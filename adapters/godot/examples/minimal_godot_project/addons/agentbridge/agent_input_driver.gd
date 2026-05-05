@@ -86,6 +86,15 @@ func apply_command(d: Dictionary) -> Dictionary:
             if on == was:
                 return {"ok": true, "noop": true}
             _sticky_state[name] = on
+            # parse_input_event delivers a real input event through the
+            # event pipeline so _input / _unhandled_input fire AND
+            # is_action_pressed reflects state. Action_press alone has
+            # been observed to not propagate in headless mode.
+            var ev: InputEventAction = InputEventAction.new()
+            ev.action = input_action
+            ev.pressed = on
+            ev.strength = 1.0 if on else 0.0
+            Input.parse_input_event(ev)
             if on:
                 Input.action_press(input_action)
             else:
@@ -95,6 +104,11 @@ func apply_command(d: Dictionary) -> Dictionary:
             if input_action == "" or not InputMap.has_action(input_action):
                 return {"ok": false, "error": "input action missing: %s" % input_action,
                         "code": 2002}
+            var ev: InputEventAction = InputEventAction.new()
+            ev.action = input_action
+            ev.pressed = true
+            ev.strength = 1.0
+            Input.parse_input_event(ev)
             Input.action_press(input_action)
             call_deferred("_release_pulse", input_action)
             return {"ok": true}
