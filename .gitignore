@@ -50,3 +50,5 @@ _site/
 .env
 .env.local
 agentbridge.token
+
+.vercel
